@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ProveedorAccesibilidad } from './context/ContextoAccesibilidad';
+import { NavBar } from './components/organisms/NavBar';
+import { Home } from './pages/Home';
+import { Configuracion } from './pages/Configuracion'; 
 
-function App() {
+export const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <ProveedorAccesibilidad>
+      <Router>
+        
+        <NavBar /> 
+        
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/configuracion" element={<Configuracion />} />
+        </Routes>
 
-export default App;
+      </Router>
+    </ProveedorAccesibilidad>
+  );
+};
