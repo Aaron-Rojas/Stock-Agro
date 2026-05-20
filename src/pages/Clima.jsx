@@ -46,7 +46,7 @@ export const Clima = () => {
                     viento: '10 km/h',
                     probabilidadLluvia: '10%',
                     recomendacion: textoRecomendacion,
-                    esBuenDia: esBuenDia 
+                    esBuenDia: esBuenDia
                 });
                 setCargando(false);
             }, 1500);
@@ -107,15 +107,14 @@ export const Clima = () => {
                                 {climaInfo.condicion}
                             </p>
 
-                            {/* Contenedor de Humedad, Viento y Lluvia con iconos y más espaciado */}
                             <div style={{
                                 display: 'flex',
-                                justifyContent: 'space-between', // Distribuye uniformemente el espacio
+                                justifyContent: 'space-between',
                                 fontSize: tamanoTextoNormal,
                                 borderTop: `2px solid ${temaActual.textoPrincipal}`,
                                 paddingTop: '25px',
                                 paddingBottom: '10px',
-                                gap: '15px' // Añade espacio base entre columnas
+                                gap: '15px'
                             }}>
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
                                     <span style={{ fontSize: '32px' }}>💧</span>
@@ -137,10 +136,8 @@ export const Clima = () => {
                             </div>
                         </div>
 
-                        {/* Texto Amigable (Recomendación) modificado */}
                         <div style={{
-                            // Si es un buen día usa fondo verde, texto blanco y un tamaño mayor. 
-                            // Si no, usa los colores por defecto del tema.
+
                             backgroundColor: climaInfo.esBuenDia ? '#4CAF50' : 'transparent',
                             color: climaInfo.esBuenDia ? '#FFFFFF' : temaActual.textoPrincipal,
                             fontSize: climaInfo.esBuenDia ? tamanoTextoGrande : tamanoSubtitulo,
