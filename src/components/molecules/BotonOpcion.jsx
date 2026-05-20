@@ -2,14 +2,16 @@ import React from 'react';
 import { useAccesibilidad } from '../../hooks/useAccesibilidad';
 
 export const BotonOpcion = ({ numero, icono, texto, accionClick }) => {
-  const { temaActual, esLetraGrande } = useAccesibilidad();
+  const { temaActual, nivelLetra } = useAccesibilidad();
+
+  const tamanoLetra = nivelLetra === 'normal' ? '16px' : nivelLetra === 'grande' ? '22px' : '26px';
 
   return (
     <button 
       onClick={accionClick}
       style={{
-        backgroundColor: temaActual.fondoBotonCuadrado,
-        border: `4px solid ${temaActual.bordeBotonCuadrado}`,
+        backgroundColor: temaActual.fondoTarjeta,
+        border: `4px solid ${temaActual.bordePrincipal}`,
         borderRadius: '10px',
         display: 'flex',
         flexDirection: 'column',
@@ -17,10 +19,10 @@ export const BotonOpcion = ({ numero, icono, texto, accionClick }) => {
         justifyContent: 'center',
         padding: '20px',
         cursor: 'pointer',
-        minHeight: '160px' // Para que sean cuadrados grandes
+        minHeight: '250px' 
       }}
     >
-      {/* La etiqueta del número (Ej: [ 1 ]) */}
+      {/* La etiqueta del número */}
       <div style={{ display: 'flex', width: '100%', justifyContent: 'flex-start' }}>
         <span style={{ 
           backgroundColor: '#000', 
@@ -40,7 +42,7 @@ export const BotonOpcion = ({ numero, icono, texto, accionClick }) => {
 
       <span style={{ 
         color: temaActual.textoPrincipal, 
-        fontSize: esLetraGrande ? '26px' : '16px', 
+        fontSize: tamanoLetra ? '26px' : '16px', 
         fontWeight: 'bold', 
         fontFamily: 'monospace',
         textAlign: 'center'

@@ -1,20 +1,21 @@
+// src/tema/colores.js
 export const temaColores = {
   normal: {
-    fondoPrincipal: '#FFFFFF', // Fondo blanco de la página
-    fondoNavbar: '#003366',    // Azul oscuro del MIDIS
-    textoPrincipal: '#000000', // Texto negro
-    textoNavbar: '#FFFFFF',    // Letras blancas en la barra
-    lineaNavbar: '#FFFFFF',    // Líneas separadoras blancas
-    fondoBotonCuadrado: '#FFFFFF',
-    bordeBotonCuadrado: '#000000'
+    fondoPrincipal: '#EAFDF8',
+    fondoTarjeta: '#FFFFFF',   
+    textoPrincipal: '#000000', 
+    bordePrincipal: '#000000',
+    botonPeligro: '#FF0000',  
+    botonExito: '#009900',     
+    textoBoton: '#FFFFFF'      
   },
   altoContraste: {
-    fondoPrincipal: '#000000', // Fondo negro puro
-    fondoNavbar: '#000000',    // Barra negra para que se funda
-    textoPrincipal: '#FFFFFF', // Texto blanco
-    textoNavbar: '#FFFFFF',    
-    lineaNavbar: '#FF0000',    // Línea roja inferior que se ve en tu imagen
-    fondoBotonCuadrado: '#FFFFFF',
-    bordeBotonCuadrado: '#FFFFFF'
+    fondoPrincipal: '#000000', 
+    fondoTarjeta: '#000000',   
+    textoPrincipal: '#FFFFFF', 
+    bordePrincipal: '#FFFFFF', 
+    botonPeligro: '#1F2937',   
+    botonExito: '#1F2937',     
+    textoBoton: '#FFFFFF'      
   }
 };
