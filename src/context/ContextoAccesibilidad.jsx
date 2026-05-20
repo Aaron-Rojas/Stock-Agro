@@ -26,6 +26,12 @@ export const ProveedorAccesibilidad = ({ children }) => {
     else if (nivelLetra === 'grande') setNivelLetra('normal');
   }
 
+  const calcularTamano = (tamanoBase) => {
+    if (nivelLetra === 'grande') return (tamanoBase + 8) + 'px';
+    if (nivelLetra === 'extra') return (tamanoBase + 16) + 'px';
+    return tamanoBase + 'px';
+  };
+
   return (
     <ContextoAccesibilidad.Provider 
       value={{ 
@@ -35,7 +41,8 @@ export const ProveedorAccesibilidad = ({ children }) => {
         alternarContraste,
         cambiarTamanoLetra,
         aumentarLetra,
-        disminuirLetra
+        disminuirLetra,
+        calcularTamano
       }}
     >
       {children}

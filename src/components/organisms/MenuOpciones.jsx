@@ -1,9 +1,12 @@
 import React from 'react';
 import { BotonOpcion } from '../molecules/BotonOpcion';
+import { useNavigate } from 'react-router-dom';
 
-import { Link } from 'react-router-dom'; 
-
+//import { Link } from 'react-router-dom'; 
+  
 export const MenuOpciones = () => {
+
+  const navigate = useNavigate()
   return (
     <div style={{
       display: 'grid',
@@ -16,9 +19,9 @@ export const MenuOpciones = () => {
       
       {/* En el futuro estos Link llevarán a sus rutas, por ahora simulan el clic */}
       <BotonOpcion numero="1" icono="☀️" texto="CLIMA" accionClick={() => alert('Navegar a Clima')} />
-      <BotonOpcion numero="2" icono="💰" texto="¿A CUÁNTO VENDER?" accionClick={() => alert('Navegar a Ventas')} />
+      <BotonOpcion numero="2" icono="💰" texto="¿A CUÁNTO VENDER?" accionClick={() => navigate("/calculadora")} />
       <BotonOpcion numero="3" icono="🐛" texto="ALERTAS DE PLAGAS" accionClick={() => alert('Navegar a Plagas')} />
-      <BotonOpcion numero="4" icono="🌱" texto="SEMILLAS Y ABONO" accionClick={() => alert('Navegar a Abono')} />
+      <BotonOpcion numero="4" icono="🌱" texto="SEMILLAS Y ABONO" accionClick={() => navigate("/seleccion-cultivo")} />
 
     </div>
   );
