@@ -1,17 +1,19 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { ProveedorAccesibilidad } from './context/ContextoAccesibilidad';
-import { NavBar } from './components/organisms/NavBar';
-import { Home } from './pages/Home';
-import { Configuracion } from './pages/Configuracion';
-import { Calculadora } from './pages/Calculadora';
-import { SeleccionCultivo } from './pages/SeleccionCultivo';
-import { ResultadosCalculadora } from './pages/ResultadosCalculadora';
-import { Clima } from './pages/Clima';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ProveedorAccesibilidad } from "./context/ContextoAccesibilidad";
+import { NavBar } from "./components/organisms/NavBar";
+import { Home } from "./pages/Home";
+import { Configuracion } from "./pages/Configuracion";
+import { Calculadora } from "./pages/Calculadora";
+import { SeleccionCultivo } from "./pages/SeleccionCultivo";
+import { ResultadosCalculadora } from "./pages/ResultadosCalculadora";
+import { Clima } from "./pages/Clima";
+import { Plagas } from "./pages/Plagas";
+import { CuidarSiembras } from "./pages/CuidarSiembras";
+
 export const App = () => {
   return (
     <ProveedorAccesibilidad>
       <Router>
-
         <NavBar />
 
         <Routes>
@@ -29,8 +31,12 @@ export const App = () => {
           {/* Página del clima */}
           <Route path="/Clima" element={<Clima />} />
 
-        </Routes>
+          {/* Página de plagas */}
+          <Route path="/Plagas" element={<Plagas />} />
 
+          {/* Página de cuidado de la siembra*/}
+          <Route path="/CuidarSiembras" element={<CuidarSiembras />} />
+        </Routes>
       </Router>
     </ProveedorAccesibilidad>
   );
