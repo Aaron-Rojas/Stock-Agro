@@ -13,24 +13,6 @@ export const CuidarSiembras = () => {
             : nivelLetra === "grande"
                 ? "38px"
                 : "45px";
-    const tamanoSubtitulo =
-        nivelLetra === "normal"
-            ? "20px"
-            : nivelLetra === "grande"
-                ? "24px"
-                : "28px";
-    const tamanoTextoGrande =
-        nivelLetra === "normal"
-            ? "24px"
-            : nivelLetra === "grande"
-                ? "30px"
-                : "36px";
-    const tamanoTextoNormal =
-        nivelLetra === "normal"
-            ? "18px"
-            : nivelLetra === "grande"
-                ? "22px"
-                : "26px";
 
     const calcularTamano = (tamanoBase) => {
         if (nivelLetra === "grande") return tamanoBase + 8 + "px";

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Contenedor } from "../components/atoms/Contenedor";
 import { useAccesibilidad } from "../hooks/useAccesibilidad";
@@ -7,7 +7,6 @@ export const Plagas = () => {
     const { temaActual, nivelLetra } = useAccesibilidad();
     const navigate = useNavigate();
 
-    const [cargando, setCargando] = useState(true);
 
     const tamanoTitulo =
         nivelLetra === "normal"
@@ -27,12 +26,7 @@ export const Plagas = () => {
             : nivelLetra === "grande"
                 ? "30px"
                 : "36px";
-    const tamanoTextoNormal =
-        nivelLetra === "normal"
-            ? "18px"
-            : nivelLetra === "grande"
-                ? "22px"
-                : "26px";
+
 
     const calcularTamano = (tamanoBase) => {
         if (nivelLetra === "grande") return tamanoBase + 8 + "px";
