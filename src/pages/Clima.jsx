@@ -28,7 +28,7 @@ export const Clima = () => {
         year: "numeric",
     });
 
-    const textoLectura = `Clima soleado y despejado. Lima, Perú, fecha actual: ${fechaActual}. ¡Hoy es un gran día para trabajar en el campo!.`;
+    const textoLectura = `Clima soleado y despejado. Lima, Perú, fecha actual: ${fechaActual}. ¡Hoy es un gran día para trabajar en el campo!. Presiona la tecla 0 para regresar al inicio.`;
 
 
 

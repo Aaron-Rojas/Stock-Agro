@@ -14,7 +14,7 @@ export const SeleccionCultivo = () => {
     navigate('/calculadora');
   };
 
-  const textoLectura = `Seleccione el cultivo que desea sembrar: 1 para papa, 2 para tomate. Presione 0 para regresar al menú principal.`;
+  const textoLectura = `Seleccione el cultivo que desea sembrar: uno para papa, 2 para tomate. Presione 0 para regresar al inicio.`;
 
 
   useEffect(() => {

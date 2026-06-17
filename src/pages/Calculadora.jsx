@@ -13,7 +13,7 @@ export const Calculadora = () => {
     return tamanoBase + 'px';
   };
 
-  const textoLectura = `Ingrese en números la cantidad de hectáreas de tierra que tiene. Presione 1 para continuar o 0 para regresar al menú principal.`;
+  const textoLectura = `Ingrese en números la cantidad de hectáreas de tierra que tiene. Presione uno para continuar o 0 para regresar al menú principal.`;
 
 
   useEffect(() => {
