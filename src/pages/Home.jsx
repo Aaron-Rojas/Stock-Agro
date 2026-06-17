@@ -15,7 +15,7 @@ export const Home = () => {
         ? "38px"
         : "45px";
 
-  const textoLectura = `Bienvenido a Stock Agro, tu asistente agrícola inteligente. Presiona cualquier numero del 1 al 4 para comenzar.`;
+  const textoLectura = `Bienvenido a Agro-Kiosko, tu asistente agrícola inteligente. Presiona cualquier numero del 1 al 4 para comenzar.`;
 
   
   useEffect(() => {
