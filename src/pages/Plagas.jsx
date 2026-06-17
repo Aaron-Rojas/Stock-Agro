@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Contenedor } from "../components/atoms/Contenedor";
 import { useAccesibilidad } from "../hooks/useAccesibilidad";
@@ -6,6 +6,8 @@ import { useAccesibilidad } from "../hooks/useAccesibilidad";
 export const Plagas = () => {
     const { temaActual, nivelLetra } = useAccesibilidad();
     const navigate = useNavigate();
+
+    const [cargando, setCargando] = useState(true);
 
 
     const tamanoTitulo =
@@ -26,6 +28,13 @@ export const Plagas = () => {
             : nivelLetra === "grande"
                 ? "30px"
                 : "36px";
+
+    const tamanoTextoNormal =
+        nivelLetra === 'normal'
+            ? '18px'
+            : nivelLetra === 'grande'
+                ? '22px'
+                : '26px';
 
 
     const calcularTamano = (tamanoBase) => {
@@ -77,6 +86,17 @@ export const Plagas = () => {
             }
         };
     }, [navigate, textoLectura]);
+
+
+    useEffect(() => {
+        const simularCarga = () => {
+            setTimeout(() => {
+                setCargando(false);
+            }, 1200);
+        };
+
+        simularCarga();
+    }, []);
 
     const estilos = {
         pantallaCentrada: {
@@ -135,6 +155,12 @@ export const Plagas = () => {
                     Lima, Perú - {fechaActual}
                 </h2>
 
+                {cargando ? (
+                    <p style={{ fontSize: tamanoTextoNormal, color: temaActual.textoPrincipal }}>
+                        Cargando alertas de plagas...
+                    </p>
+                ) : (
+                    <>
                 <div style={estilos.tarjetaAlerta} role="alert">
                     <span style={estilos.iconoAlerta} aria-hidden="true">
                         ⚠️
@@ -212,6 +238,8 @@ export const Plagas = () => {
                         ← REGRESAR
                     </button>
                 </div>
+                </>
+                )}
             </div>
         </Contenedor>
     );

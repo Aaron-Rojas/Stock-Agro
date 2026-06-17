@@ -91,7 +91,7 @@ export const Clima = () => {
                     esBuenDia: esBuenDia
                 });
                 setCargando(false);
-            }, 1500);
+            }, 1200);
         };
 
         obtenerDatosClima();

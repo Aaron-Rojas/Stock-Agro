@@ -21,9 +21,8 @@ export const CuidarSiembras = () => {
     };
 
     const textoLectura = `Recomendación para cuidar de tus siembras. Tip 1:  Mezcla el jabón con agua, rocía las plantas afectadas, asegúrate de mojar la parte de abajo de las hojas y aplícalo siempre en la tarde cuando no haya sol. Presione el número cero para regresar.`;
-    
-    useEffect(() => {
 
+    useEffect(() => {
         const ejecutarLectura = () => {
             if ("speechSynthesis" in window) {
                 window.speechSynthesis.cancel();
@@ -56,63 +55,94 @@ export const CuidarSiembras = () => {
         };
     }, [navigate, textoLectura]);
 
+    const renderFilaResultado = (texto) => (
+        <div
+            style={{
+                border: `4px solid ${temaActual.botonExito}`,
+                borderRadius: "10px",
+                padding: "20px 40px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                gap: "30px",
+                width: "100%",
+                maxWidth: "600px",
+                backgroundColor: temaActual.fondoTarjeta,
+            }}
+        >
+            <span
+                style={{
+                    color: temaActual.textoPrincipal,
+                    fontSize: calcularTamano(30),
+                    fontWeight: "bold",
+                    fontFamily: "monospace",
+                }}
+            >
+                {texto}
+            </span>
+        </div>
+    );
+
     return (
         <Contenedor>
-            <div style={{ padding: "30px", textAlign: "center" }}>
-                <h2
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    padding: "40px",
+                    gap: "30px",
+                    flex: 1,
+                }}
+            >
+                {/* Título Principal */}
+                <h1
                     style={{
-                        fontSize: tamanoTitulo,
-                        fontWeight: "bold",
-                        margin: "10px 0",
                         color: temaActual.textoPrincipal,
+                        fontSize: calcularTamano(40),
+                        fontFamily: "monospace",
+                        textAlign: "center",
+                        maxWidth: "600px",
+                        lineHeight: "1.2",
                     }}
                 >
                     Recomendacion para cuidar de tus siembras
-                </h2>
-                <p
-                    style={{
-                        fontSize: tamanoTitulo,
-                        fontWeight: "bold",
-                        margin: "100px 200px",
-                        color: temaActual.textoPrincipal,
-                        border: "4px solid",
-                    }}
-                >
-                    TIP 1 💡: <br />
-                    ✅ Mezcla el jabón con agua.
-                    <br />
-                    ✅Rocía las plantas afectadas.
-                    <br />
-                    ✅Asegúrate de mojar la parte de abajo de las hojas.
-                    <br />
-                    ✅Aplícalo siempre en la tarde cuando no haya sol.
-                    <br />
-                </p>
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '30px',
-                    marginTop: '20px',
-                    width: '100%',
-                    alignItems: 'center'
-                }}>
+                </h1>
+
+                {/* Filas de Resultados  */}
+                {renderFilaResultado(" ✅ Mezcla el jabón con agua.")}
+                {renderFilaResultado(" ✅ Rocía las plantas afectadas")}
+                {renderFilaResultado(" ✅ Asegúrate de mojar la parte de abajo de las hojas")}
+                {renderFilaResultado(" ✅ Aplícalo siempre en la tarde cuando no haya sol")}
+
+                {/* Botón Regresar */}
+                <div style={{ marginTop: "40px" }}>
                     <button
-                        onClick={() => navigate('/')}
+                        onClick={() => navigate("/")}
                         style={{
                             backgroundColor: temaActual.botonPeligro,
                             color: temaActual.textoBoton,
                             border: `4px solid ${temaActual.bordePrincipal}`,
-                            borderRadius: '40px',
-                            padding: '20px 60px',
+                            borderRadius: "40px",
+                            padding: "20px 60px",
                             fontSize: calcularTamano(30),
-                            fontWeight: 'bold',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '15px',
-                            cursor: 'pointer'
+                            fontWeight: "bold",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "15px",
+                            cursor: "pointer",
                         }}
                     >
-                        <span style={{ backgroundColor: '#000', color: '#FFF', padding: '5px 15px', borderRadius: '10px' }}>0</span>
+                        <span
+                            style={{
+                                backgroundColor: "#000",
+                                color: "#FFF",
+                                padding: "5px 15px",
+                                borderRadius: "10px",
+                            }}
+                        >
+                            0
+                        </span>
                         ← REGRESAR
                     </button>
                 </div>
