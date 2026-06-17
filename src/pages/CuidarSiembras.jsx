@@ -7,13 +7,6 @@ export const CuidarSiembras = () => {
     const { temaActual, nivelLetra } = useAccesibilidad();
     const navigate = useNavigate();
 
-    const tamanoTitulo =
-        nivelLetra === "normal"
-            ? "30px"
-            : nivelLetra === "grande"
-                ? "38px"
-                : "45px";
-
     const calcularTamano = (tamanoBase) => {
         if (nivelLetra === "grande") return tamanoBase + 8 + "px";
         if (nivelLetra === "extra") return tamanoBase + 16 + "px";
