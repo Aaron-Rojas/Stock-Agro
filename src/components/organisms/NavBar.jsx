@@ -31,7 +31,7 @@ export const NavBar = () => {
         console.log("Comando de voz recibido:", comando);
         
         // Lógica de navegación por comandos de voz
-        if (comando.includes('clima') || comando.includes('tiempo') || comando.includes('Tiempo.') || comando.includes('Clima.')){
+        if (comando.includes('clima') || comando.includes('tiempo') || comando.includes('Tiempo.') || comando.includes('Clima')){
           navigate('/clima');
         } else if (comando.includes('plaga') || comando.includes('alerta')) {
           navigate('/plagas');
@@ -41,7 +41,7 @@ export const NavBar = () => {
           navigate('/configuracion');
         } else if (comando.includes('inicio') || comando.includes('regresar') || comando.includes('home')) {
           navigate('/');
-        }else if (comando.includes('Cultivos.') || comando.includes('cultivos.') || comando.includes('cultivo.') || comando.includes('Cultivo.')) {
+        }else if (comando.includes('Cultivos') || comando.includes('cultivos') || comando.includes('cultivo') || comando.includes('Cultivos')) {
           navigate('/seleccion-cultivo');
         }
       };
