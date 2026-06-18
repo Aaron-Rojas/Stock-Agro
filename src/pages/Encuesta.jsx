@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Contenedor } from "../components/atoms/Contenedor";
-import { Texto } from "../components/atoms/Texto";
 import { useAccesibilidad } from "../hooks/useAccesibilidad";
 import { useNavigate } from "react-router-dom";
 
@@ -38,7 +37,7 @@ export const Encuesta = () => {
     return () => {
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     };
-  }, []);
+  }, [textoIntroduccion]);
 
   const preguntas = [
     { id: "p1", num: "1", texto: "Cuando presioné una tecla, la pantalla me mostró claramente cuál opción elegí y escuché una voz que me explicó lo que pasó." },
