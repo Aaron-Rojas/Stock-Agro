@@ -24,7 +24,7 @@ export const NavBar = () => {
 
       recognition.onstart = () => setEscuchando(true);
       recognition.onend = () => setEscuchando(false);
-      recognition.onerror = () => setEscuchando(false);
+      recognition.onerror = () => setEscuchando(false); 
 
       recognition.onresult = (event) => {
         const comando = event.results[0][0].transcript.toLowerCase().trim().replace('.', '');
