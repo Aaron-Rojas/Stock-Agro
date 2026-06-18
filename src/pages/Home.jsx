@@ -8,7 +8,7 @@ export const Home = () => {
   const { temaActual, nivelLetra } = useAccesibilidad();
   const navigate = useNavigate();
   
-  // Estado para controlar si el modal está abierto o cerrado
+  // Estado para controlar si el modal del video está abierto o cerrado
   const [mostrarModal, setMostrarModal] = useState(false);
 
   const tamanoTitulo =
@@ -18,16 +18,16 @@ export const Home = () => {
         ? "38px"
         : "45px";
 
-  // Audio de bienvenida que avisa de la nueva opción
-  const textoLectura = `Bienvenido a Agro Kiosko, tu asistente agrícola inteligente. Presiona cualquier número del 1 al 4 para las opciones, o presiona el número 5 para ver el video de consejos de uso.`;
-  
+  // 🔊 Audio de bienvenida actualizado: ahora incluye las instrucciones para el video (5) y la encuesta (6)
+  const textoLectura = `Bienvenido a Agro Kiosko, tu asistente agrícola inteligente. Presiona cualquier número del 1 al 4 para las opciones principales. Presiona el número 5 para ver el video de consejos de uso, o presiona el número 6 para responder la encuesta de satisfacción.`;
+
   useEffect(() => {
     const ejecutarLectura = () => {
       if ("speechSynthesis" in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(textoLectura);
         utterance.lang = "es-ES";
-        utterance.rate = 0.9;
+        utterance.rate = 0.85; // Velocidad pausada ideal para la zona rural
         window.speechSynthesis.speak(utterance);
       }
     };
@@ -49,9 +49,12 @@ export const Home = () => {
         navigate("/seleccion-cultivo");
       } else if (event.key === "5") {
         window.speechSynthesis.cancel();
-        setMostrarModal(true); // Abre el modal con la tecla 5
+        setMostrarModal(true); // Abre el modal multimedia
+      } else if (event.key === "6") {
+        window.speechSynthesis.cancel();
+        navigate("/encuesta"); // Va directo a la encuesta IHM
       } else if (event.key === "Escape") {
-        setMostrarModal(false); // Cierra el modal con la tecla Escape
+        setMostrarModal(false); // Cierra el video con la tecla Escape
       }
     };
 
@@ -66,7 +69,7 @@ export const Home = () => {
   }, [navigate, textoLectura]);
 
   // ⚠️ REEMPLAZA ESTO con las letras y números finales de tu enlace de YouTube
-  const ID_VIDEO_YOUTUBE = "G3AJMjl21lU"; 
+  const ID_VIDEO_YOUTUBE = "TU_ID_DE_VIDEO_AQUÍ"; 
 
   return (
     <Contenedor>
@@ -85,27 +88,36 @@ export const Home = () => {
         </h1>
       </div>
 
-      {/* Tus 4 botones en cuadrícula (Clima, ¿A cuánto vender?, Alertas, Semillas) */}
+      {/* Tus 4 botones en cuadrícula limpia */}
       <MenuOpciones />
 
-      {/* 🟢 NUEVO BOTÓN VISUAL [5] (Se ubica centrado debajo de la cuadrícula) */}
-      <div style={{ display: "flex", justifyContent: "center", marginTop: "35px", paddingBottom: "40px" }}>
+      {/* 🟢 SECCIÓN DE BOTONES COMPLEMENTARIOS GIGANTES */}
+      <div style={{ 
+        display: "flex", 
+        justifyContent: "center", 
+        gap: "25px", 
+        marginTop: "40px", 
+        paddingBottom: "40px",
+        flexWrap: "wrap" 
+      }}>
+        
+        {/* Botón [5] - Consejos de Uso (Verde) */}
         <button
           onClick={() => {
             if ("speechSynthesis" in window) window.speechSynthesis.cancel();
             setMostrarModal(true);
           }}
           style={{
-            backgroundColor: "#4CAF50", // Mismo verde accesible de tus prototipos
+            backgroundColor: "#4CAF50",
             color: "#000000",
             border: "4px solid #000000",
             borderRadius: "15px",
-            padding: nivelLetra === "normal" ? "18px 40px" : "26px 50px",
-            fontSize: nivelLetra === "normal" ? "24px" : "32px",
+            padding: nivelLetra === "normal" ? "18px 35px" : "26px 45px",
+            fontSize: nivelLetra === "normal" ? "22px" : "30px",
             fontWeight: "bold",
             cursor: "pointer",
             fontFamily: "monospace",
-            boxShadow: "0px 6px 0px #000000", // Efecto de botón grueso/físico
+            boxShadow: "0px 6px 0px #000000",
             transition: "transform 0.1s, box-shadow 0.1s"
           }}
           onMouseDown={(e) => {
@@ -119,9 +131,41 @@ export const Home = () => {
         >
           📺 [5] CONSEJOS PARA USAR
         </button>
+
+        {/* Botón [6] - Encuesta IHM (Azul) */}
+        <button
+          onClick={() => {
+            if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+            navigate("/encuesta");
+          }}
+          style={{
+            backgroundColor: "#2196F3",
+            color: "#FFFFFF",
+            border: "4px solid #000000",
+            borderRadius: "15px",
+            padding: nivelLetra === "normal" ? "18px 35px" : "26px 45px",
+            fontSize: nivelLetra === "normal" ? "22px" : "30px",
+            fontWeight: "bold",
+            cursor: "pointer",
+            fontFamily: "monospace",
+            boxShadow: "0px 6px 0px #000000",
+            transition: "transform 0.1s, box-shadow 0.1s"
+          }}
+          onMouseDown={(e) => {
+            e.currentTarget.style.transform = "translateY(4px)";
+            e.currentTarget.style.boxShadow = "0px 2px 0px #000000";
+          }}
+          onMouseUp={(e) => {
+            e.currentTarget.style.transform = "translateY(0px)";
+            e.currentTarget.style.boxShadow = "0px 6px 0px #000000";
+          }}
+        >
+          📝 [6] RESPONDER ENCUESTA
+        </button>
+
       </div>
 
-      {/* MODAL DEL VIDEO DE YOUTUBE */}
+      {/* MODAL EMERGENTE PARA EL VIDEO DE YOUTUBE */}
       {mostrarModal && (
         <div
           style={{
