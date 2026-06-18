@@ -12,6 +12,7 @@ import { CuidarSiembras } from "./pages/CuidarSiembras";
 
 import { Encuesta } from "./pages/Encuesta";
 
+import './App.css'
 
 export const App = () => {
   return (

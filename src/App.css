@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+/* Estilos globales para los subtítulos del Agro-Kiosko */
+video::cue {
+  font-size: 32px; /* Tamaño gigante para facilitar la lectura */
+  background-color: rgba(0, 0, 0, 0.9); /* Fondo negro casi sólido para contraste */
+  color: #FFFFFF; /* Texto blanco puro */
+  font-family: monospace; /* Mantiene la coherencia con el resto de tu tipografía */
+  font-weight: bold;
+}
