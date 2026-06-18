@@ -10,6 +10,9 @@ import { Clima } from "./pages/Clima";
 import { Plagas } from "./pages/Plagas";
 import { CuidarSiembras } from "./pages/CuidarSiembras";
 
+import { Encuesta } from "./pages/Encuesta";
+
+
 export const App = () => {
   return (
     <ProveedorAccesibilidad>
@@ -36,6 +39,8 @@ export const App = () => {
 
           {/* Página de cuidado de la siembra*/}
           <Route path="/CuidarSiembras" element={<CuidarSiembras />} />
+
+          <Route path="/encuesta" element={<Encuesta />} />
         </Routes>
       </Router>
     </ProveedorAccesibilidad>
