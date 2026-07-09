@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react'; // Agregamos useState y useE
 import { useNavigate } from 'react-router-dom';     // Agregamos useNavigate para poder cambiar de página por voz
 import { useAccesibilidad } from '../../hooks/useAccesibilidad';
 import { BotonAccesibilidad } from '../molecules/BotonAccesibilidad';
+import { useTraduccion } from '../../hooks/useTraduccion';
 // import Logo from '../../assets/logo.png'; 
 
 export const NavBar = () => {
+
+  const { idioma, cambiarIdioma, t } = useTraduccion();
   // Extraemos las funciones del cerebro
   const { temaActual, aumentarLetra, disminuirLetra, alternarContraste } = useAccesibilidad();
   const navigate = useNavigate(); // Hook para la navegación
@@ -24,14 +27,14 @@ export const NavBar = () => {
 
       recognition.onstart = () => setEscuchando(true);
       recognition.onend = () => setEscuchando(false);
-      recognition.onerror = () => setEscuchando(false); 
+      recognition.onerror = () => setEscuchando(false);
 
       recognition.onresult = (event) => {
         const comando = event.results[0][0].transcript.toLowerCase().trim().replace('.', '');
         console.log("Comando de voz recibido:", comando);
-        
+
         // Lógica de navegación por comandos de voz
-        if (comando.includes('clima') || comando.includes('tiempo') || comando.includes('Tiempo.') || comando.includes('Clima')){
+        if (comando.includes('clima') || comando.includes('tiempo') || comando.includes('Tiempo.') || comando.includes('Clima')) {
           navigate('/clima');
         } else if (comando.includes('plaga') || comando.includes('alerta')) {
           navigate('/plagas');
@@ -41,7 +44,7 @@ export const NavBar = () => {
           navigate('/configuracion');
         } else if (comando.includes('inicio') || comando.includes('regresar') || comando.includes('home')) {
           navigate('/');
-        }else if (comando.includes('Cultivos') || comando.includes('cultivos') || comando.includes('cultivo') || comando.includes('Cultivos')) {
+        } else if (comando.includes('Cultivos') || comando.includes('cultivos') || comando.includes('cultivo') || comando.includes('Cultivos')) {
           navigate('/seleccion-cultivo');
         }
       };
@@ -68,7 +71,7 @@ export const NavBar = () => {
   };
 
   return (
-    <nav style={{
+    <nav className="navbar" style={{
       backgroundColor: temaActual.fondoNavbar,
       display: 'flex',
       justifyContent: 'space-between',
@@ -76,7 +79,7 @@ export const NavBar = () => {
       padding: '10px 20px',
       borderBottom: temaActual.fondoNavbar === '#000000' ? '2px solid red' : 'none' // Línea roja en alto contraste
     }}>
-      
+
       {/* Zona Izquierda: Logo (Aquí puedes poner tu etiqueta <img /> luego) */}
       <div style={{ color: temaActual.textoNavbar, fontWeight: 'bold', fontSize: '30px' }}>
         🌿 Agro-Kiosko
@@ -86,13 +89,22 @@ export const NavBar = () => {
         <BotonAccesibilidad icono="🔊" accionClick={() => console.log('Activar voz')} />
         <BotonAccesibilidad icono="+T" accionClick={aumentarLetra} />
         <BotonAccesibilidad icono="-T" accionClick={disminuirLetra} />
-        
+
         {/* Modificado únicamente para llamar a la función de reconocimiento de voz y cambiar el icono dinámicamente si está activo */}
         <BotonAccesibilidad icono={escuchando ? "🛑" : "🎙️"} accionClick={abrirMicrofono} />
-        
+
         <BotonAccesibilidad icono="🌓" accionClick={alternarContraste} />
       </div>
 
+      <div className="selector-idioma" style={{ marginLeft: 'auto', padding: '0 10px' }}>
+        <button
+          onClick={() => cambiarIdioma(idioma === 'es' ? 'qu' : 'es')}
+          aria-label="Cambiar idioma"
+          style={{ cursor: 'pointer' }}
+        >
+          {idioma === 'es' ? '🌐 Runasimi (Quechua)' : '🌐 Español'}
+        </button>
+      </div>
     </nav>
   );
 };

@@ -3,10 +3,13 @@ import { Contenedor } from "../components/atoms/Contenedor";
 import { useAccesibilidad } from "../hooks/useAccesibilidad";
 import { useNavigate } from "react-router-dom";
 import { MenuOpciones } from "../components/organisms/MenuOpciones";
+import { useTraduccion } from '../hooks/useTraduccion';
 
 export const Home = () => {
   const { temaActual, nivelLetra } = useAccesibilidad();
   const navigate = useNavigate();
+
+  const { t } = useTraduccion();
   
   // Estados para controlar el modal y el video
   const [mostrarModal, setMostrarModal] = useState(false);
@@ -104,7 +107,7 @@ export const Home = () => {
             margin: 0,
           }}
         >
-          INICIO
+          {t("INICIO")}
         </h1>
       </div>
 
@@ -138,7 +141,7 @@ export const Home = () => {
             transition: "transform 0.1s, box-shadow 0.1s"
           }}
         >
-          📺 [5] CONSEJOS PARA USAR
+          {t("📺 [5] CONSEJOS PARA USAR")}
         </button>
 
         <button
@@ -160,7 +163,7 @@ export const Home = () => {
             transition: "transform 0.1s, box-shadow 0.1s"
           }}
         >
-          📝 [6] RESPONDER ENCUESTA
+          {t("📝 [6] RESPONDER ENCUESTA")}
         </button>
 
       </div>
