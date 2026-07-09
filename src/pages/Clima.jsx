@@ -3,8 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { Contenedor } from '../components/atoms/Contenedor';
 import { useAccesibilidad } from '../hooks/useAccesibilidad';
 
+const FECHA_ACTUAL = new Date().toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+});
+
+const TEXTO_LECTURA = `Clima soleado y despejado. Lima, Perú, fecha actual: ${FECHA_ACTUAL}. ¡Hoy es un gran día para trabajar en el campo!. Presiona la tecla 0 para regresar al inicio.`;
+
 export const Clima = () => {
-    const { temaActual, nivelLetra } = useAccesibilidad();
+    const { temaActual, nivelLetra, showFeedbackModal } = useAccesibilidad();
     const navigate = useNavigate();
 
     const [climaInfo, setClimaInfo] = useState(null);
@@ -21,35 +29,33 @@ export const Clima = () => {
         return tamanoBase + 'px';
     };
 
-
-        const fechaActual = new Date().toLocaleDateString("es-ES", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-    });
-
-    const textoLectura = `Clima soleado y despejado. Lima, Perú, fecha actual: ${fechaActual}. ¡Hoy es un gran día para trabajar en el campo!. Presiona la tecla 0 para regresar al inicio.`;
-
-
-
     useEffect(() => {
-        const ejecutarLectura = () => {
-
+        if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(TEXTO_LECTURA);
+            utterance.lang = "es-ES";
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+        return () => {
             if ("speechSynthesis" in window) {
                 window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(textoLectura);
-                utterance.lang = "es-ES";
-                utterance.rate = 0.9;
-                window.speechSynthesis.speak(utterance);
             }
         };
+    }, []);
 
-        ejecutarLectura();
-
+    useEffect(() => {
         const handleKeyDown = (event) => {
             if (event.key === "0") {
                 window.speechSynthesis.cancel();
-                navigate("/");
+                const utterance = new SpeechSynthesisUtterance("Cero");
+                utterance.lang = "es-ES";
+                utterance.rate = 1.0;
+                window.speechSynthesis.speak(utterance);
+
+                showFeedbackModal("0", "Regresar a la pantalla de inicio", true);
+
+                setTimeout(() => navigate("/"), 3000);
             } 
         };
 
@@ -57,11 +63,8 @@ export const Clima = () => {
 
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
-            if ("speechSynthesis" in window) {
-                window.speechSynthesis.cancel();
-            }
         };
-    }, [navigate, textoLectura]);
+    }, [navigate, showFeedbackModal]);
 
     useEffect(() => {
         const obtenerDatosClima = () => {

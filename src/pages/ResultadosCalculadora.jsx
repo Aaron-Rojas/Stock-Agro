@@ -3,31 +3,39 @@ import { useNavigate } from 'react-router-dom';
 import { Contenedor } from '../components/atoms/Contenedor';
 import { useAccesibilidad } from '../hooks/useAccesibilidad';
 
+const TEXTO_LECTURA = `Esto es lo que necesitas comprar: 10 sacos de semilla, 15 sacos de abono y 5 galones de agua. Presione 0 para regresar al menú principal.`;
+
 export const ResultadosCalculadora = () => {
-  const { temaActual, calcularTamano } = useAccesibilidad();
+  const { temaActual, calcularTamano, showFeedbackModal } = useAccesibilidad();
   const navigate = useNavigate();
 
-  const textoLectura = `Esto es lo que necesitas comprar: 10 sacos de semilla, 15 sacos de abono y 5 galones de agua. Presione 0 para regresar al menú principal.`;
-
-
   useEffect(() => {
-    const ejecutarLectura = () => {
-
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(TEXTO_LECTURA);
+      utterance.lang = "es-ES";
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+    return () => {
       if ("speechSynthesis" in window) {
         window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(textoLectura);
-        utterance.lang = "es-ES";
-        utterance.rate = 0.9;
-        window.speechSynthesis.speak(utterance);
       }
     };
+  }, []);
 
-    ejecutarLectura();
-
+  useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "0") {
         window.speechSynthesis.cancel();
-        navigate("/");
+        const utterance = new SpeechSynthesisUtterance("Cero");
+        utterance.lang = "es-ES";
+        utterance.rate = 1.0;
+        window.speechSynthesis.speak(utterance);
+
+        showFeedbackModal("0", "Regresar a la pantalla de inicio", true);
+
+        setTimeout(() => navigate("/"), 3000);
       }
     };
 
@@ -35,11 +43,8 @@ export const ResultadosCalculadora = () => {
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
     };
-  }, [navigate, textoLectura]);
+  }, [navigate, showFeedbackModal]);
 
 
 

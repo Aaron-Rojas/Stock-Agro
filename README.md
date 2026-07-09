@@ -65,6 +65,44 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/a
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-### `npm run build` fails to minify
+# Agro Kiosko - Sistema de Accesibilidad Agrícola
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Este proyecto es un kiosk digital inteligente enfocado en la accesibilidad para usuarios rurales o adultos mayores en el sector agrícola.
+
+## 🚀 Funcionalidad: Modal Gigante de Confirmación y Retroalimentación por Voz
+
+### Propósito
+Facilitar el uso del kiosko digital por parte de adultos mayores y personas con dificultades de visión a través de dos mecanismos de accesibilidad simultáneos al presionar cualquier tecla numérica:
+1. **Confirmación Visual (Modal Gigante con Escalado Dinámico):** Se despliega un modal superpuesto de pantalla completa que indica con tipografía gigante (cuyo tamaño de letra se escala dinámicamente según la preferencia del usuario en Normal, Grande o Extra Grande) el número presionado y el destino correspondiente utilizando expresiones muy amigables y cercanas (lenguaje común).
+2. **Confirmación Auditiva (Síntesis de Voz):** El altavoz pronuncia inmediatamente el dígito presionado ("Cero", "Uno", "Dos", etc.).
+
+### 🚨 Botón de Pánico (Tecla 0)
+La tecla `0` funciona como el **Botón de Pánico / Retorno Seguro**. Al ser presionada, el modal de accesibilidad adopta una estética especial de máxima prioridad visual:
+- Fondo de color rojo vibrante y bordes gruesos de advertencia.
+- Animación de parpadeo continuo para captar la atención.
+- Íconos gigantes de alerta (`🚨`) y mensaje descriptivo especial en lenguaje común: *"¡AYUDA! Presionaste regresar (Número 0). No te preocupes, te estamos llevando de vuelta al inicio de forma segura. ¡Espera un momento!"*.
+
+### Implementación y Retraso Técnico
+Para permitir que el usuario lea pausadamente el modal gigante en lenguaje común y que la API de síntesis de voz (`SpeechSynthesis`) enuncie el dígito completo antes de que la nueva página limpie el búfer de audio, se ha implementado un retraso técnico de **3 segundos (3000ms)** tras presionar cualquier tecla numérica.
+
+### Comandos de Ejecución
+
+Para iniciar el entorno de desarrollo:
+```bash
+npm install
+npm start
+```
+
+---
+
+## 🛠️ Buenas Prácticas de Escalabilidad
+
+Para llevar este módulo de accesibilidad al siguiente nivel en futuras fases del proyecto:
+
+1. **Detección de Foco en Inputs:**
+   Actualmente, el listener de teclado captura las entradas numéricas globales. Es crucial refactorizar el código para desactivar el cambio de pantallas o el anuncio oral cuando un elemento de texto o entrada de datos (como el input de hectáreas en `Calculadora.jsx`) esté activamente enfocado, evitando interferencias en la experiencia de usuario.
+
+2. **Mecanismo de Colas (Queue) en `SpeechSynthesis`:**
+   Implementar una cola secuencial robusta para evitar el uso excesivo de `.cancel()`. De esta manera, los anuncios del número presionado y los mensajes de bienvenida de la nueva página se reproducirán de forma armoniosa y ordenada.
+
+

@@ -6,41 +6,63 @@ import { useAccesibilidad } from '../hooks/useAccesibilidad';
 import imgPapa from '../assets/papa.jpeg';
 import imgTomate from '../assets/tomate.jpeg';
 
+const TEXTO_LECTURA = `Seleccione el cultivo que desea sembrar: uno para papa, 2 para tomate. Presione 0 para regresar al inicio.`;
+
 export const SeleccionCultivo = () => {
-  const { temaActual, calcularTamano } = useAccesibilidad();
+  const { temaActual, calcularTamano, showFeedbackModal } = useAccesibilidad();
   const navigate = useNavigate();
 
   const seleccionarCultivo = (tipoCultivo) => {
     navigate('/calculadora');
   };
 
-  const textoLectura = `Seleccione el cultivo que desea sembrar: uno para papa, 2 para tomate. Presione 0 para regresar al inicio.`;
-
-
   useEffect(() => {
-    const ejecutarLectura = () => {
-
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(TEXTO_LECTURA);
+      utterance.lang = "es-ES";
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+    return () => {
       if ("speechSynthesis" in window) {
         window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(textoLectura);
-        utterance.lang = "es-ES";
-        utterance.rate = 0.9;
-        window.speechSynthesis.speak(utterance);
       }
     };
+  }, []);
 
-    ejecutarLectura();
-
+  useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === "0") {
+      const numericKeys = {
+        "0": "Cero",
+        "1": "Uno",
+        "2": "Dos"
+      };
+
+      if (numericKeys[event.key]) {
         window.speechSynthesis.cancel();
-        navigate("/");
-      } else if (event.key === "1") {
-        window.speechSynthesis.cancel();
-        navigate("/calculadora");
-      } else if (event.key === "2") {
-        window.speechSynthesis.cancel();
-        navigate("/calculadora");
+        const utterance = new SpeechSynthesisUtterance(numericKeys[event.key]);
+        utterance.lang = "es-ES";
+        utterance.rate = 1.0;
+        window.speechSynthesis.speak(utterance);
+
+        if (event.key === "0") {
+          showFeedbackModal("0", "Regresar a la pantalla de inicio", true);
+        } else if (event.key === "1") {
+          showFeedbackModal("1", "Elegir la siembra de Papa");
+        } else if (event.key === "2") {
+          showFeedbackModal("2", "Elegir la siembra de Tomate");
+        }
+
+        const actionDelayMs = 3000;
+
+        setTimeout(() => {
+          if (event.key === "0") {
+            navigate("/");
+          } else if (event.key === "1" || event.key === "2") {
+            navigate("/calculadora");
+          }
+        }, actionDelayMs);
       }
     };
 
@@ -48,11 +70,8 @@ export const SeleccionCultivo = () => {
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
     };
-  }, [navigate, textoLectura]);
+  }, [navigate, showFeedbackModal]);
 
 
   return (

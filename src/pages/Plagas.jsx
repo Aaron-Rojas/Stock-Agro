@@ -3,8 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { Contenedor } from "../components/atoms/Contenedor";
 import { useAccesibilidad } from "../hooks/useAccesibilidad";
 
+const FECHA_ACTUAL = new Date().toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+});
+
+const TEXTO_LECTURA = `Alerta de plagas. Lima, Perú, fecha actual: ${FECHA_ACTUAL}. ¡Alerta! ¡Hay pulgones cerca de tu zona! Presione el número uno para escuchar cómo cuidar sus siembras, o presione el número cero para regresar al inicio.`;
+
 export const Plagas = () => {
-    const { temaActual, nivelLetra } = useAccesibilidad();
+    const { temaActual, nivelLetra, showFeedbackModal } = useAccesibilidad();
     const navigate = useNavigate();
 
     const [cargando, setCargando] = useState(true);
@@ -43,37 +51,48 @@ export const Plagas = () => {
         return tamanoBase + "px";
     };
 
-    // Obtener la fecha actual en formato local (DD/MM/AAAA)
-    const fechaActual = new Date().toLocaleDateString("es-ES", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-    });
-
-
-    const textoLectura = `Alerta de plagas. Lima, Perú, fecha actual: ${fechaActual}. ¡Alerta! ¡Hay pulgones cerca de tu zona! Presione el número uno para escuchar cómo cuidar sus siembras, o presione el número cero para regresar al inicio.`;
-
     useEffect(() => {
-
-        const ejecutarLectura = () => {
+        if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(TEXTO_LECTURA);
+            utterance.lang = "es-ES";
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+        return () => {
             if ("speechSynthesis" in window) {
                 window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(textoLectura);
-                utterance.lang = "es-ES";
-                utterance.rate = 0.9;
-                window.speechSynthesis.speak(utterance);
             }
         };
+    }, []);
 
-        ejecutarLectura();
-
+    useEffect(() => {
         const handleKeyDown = (event) => {
-            if (event.key === "1") {
+            const numericKeys = {
+                "0": "Cero",
+                "1": "Uno"
+            };
+
+            if (numericKeys[event.key]) {
                 window.speechSynthesis.cancel();
-                navigate("/CuidarSiembras");
-            } else if (event.key === "0") {
-                window.speechSynthesis.cancel();
-                navigate("/");
+                const utterance = new SpeechSynthesisUtterance(numericKeys[event.key]);
+                utterance.lang = "es-ES";
+                utterance.rate = 1.0;
+                window.speechSynthesis.speak(utterance);
+
+                if (event.key === "0") {
+                    showFeedbackModal("0", "Regresar a la pantalla de inicio", true);
+                } else {
+                    showFeedbackModal("1", "Consejos para cuidar tus plantas");
+                }
+
+                const actionDelayMs = 3000;
+
+                if (event.key === "1") {
+                    setTimeout(() => navigate("/CuidarSiembras"), actionDelayMs);
+                } else if (event.key === "0") {
+                    setTimeout(() => navigate("/"), actionDelayMs);
+                }
             }
         };
 
@@ -81,11 +100,8 @@ export const Plagas = () => {
 
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
-            if ("speechSynthesis" in window) {
-                window.speechSynthesis.cancel();
-            }
         };
-    }, [navigate, textoLectura]);
+    }, [navigate, showFeedbackModal]);
 
 
     useEffect(() => {
@@ -152,7 +168,7 @@ export const Plagas = () => {
                         color: temaActual.textoPrincipal,
                     }}
                 >
-                    Lima, Perú - {fechaActual}
+                    Lima, Perú - {FECHA_ACTUAL}
                 </h2>
 
                 {cargando ? (

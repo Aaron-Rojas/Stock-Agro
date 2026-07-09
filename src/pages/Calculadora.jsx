@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { Contenedor } from '../components/atoms/Contenedor';
 import { useAccesibilidad } from '../hooks/useAccesibilidad';
 
+const TEXTO_LECTURA = `Ingrese en números la cantidad de hectáreas de tierra que tiene. Presione uno para continuar o 0 para regresar al menú principal.`;
+
 export const Calculadora = () => {
-  const { temaActual, nivelLetra } = useAccesibilidad();
+  const { temaActual, nivelLetra, showFeedbackModal } = useAccesibilidad();
   const navigate = useNavigate();
 
   const calcularTamano = (tamanoBase) => {
@@ -13,30 +15,42 @@ export const Calculadora = () => {
     return tamanoBase + 'px';
   };
 
-  const textoLectura = `Ingrese en números la cantidad de hectáreas de tierra que tiene. Presione uno para continuar o 0 para regresar al menú principal.`;
-
-
   useEffect(() => {
-    const ejecutarLectura = () => {
-
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(TEXTO_LECTURA);
+      utterance.lang = "es-ES";
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+    return () => {
       if ("speechSynthesis" in window) {
         window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(textoLectura);
-        utterance.lang = "es-ES";
-        utterance.rate = 0.9;
-        window.speechSynthesis.speak(utterance);
       }
     };
+  }, []);
 
-    ejecutarLectura();
-
+  useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === "0") {
+      // NOTA: El listener intercepta '0' y '1' globalmente interfiriendo con la entrada de datos en el input.
+      if (event.key === "0" || event.key === "1") {
         window.speechSynthesis.cancel();
-        navigate("/");
-      } else if (event.key === "1") {
-        window.speechSynthesis.cancel();
-        navigate("/resultados");
+        const text = event.key === "1" ? "Uno" : "Cero";
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "es-ES";
+        utterance.rate = 1.0;
+        window.speechSynthesis.speak(utterance);
+        
+        if (event.key === "0") {
+          showFeedbackModal("0", "Regresar a la pantalla de inicio", true);
+        } else {
+          showFeedbackModal("1", "Ver los resultados de la calculadora");
+        }
+
+        const actionDelayMs = 3000;
+        setTimeout(() => {
+          navigate(event.key === "1" ? "/resultados" : "/");
+        }, actionDelayMs);
       }
     };
 
@@ -44,11 +58,8 @@ export const Calculadora = () => {
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
     };
-  }, [navigate, textoLectura]);
+  }, [navigate, showFeedbackModal]);
 
   return (
     <Contenedor>

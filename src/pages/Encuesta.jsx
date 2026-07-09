@@ -3,6 +3,8 @@ import { Contenedor } from "../components/atoms/Contenedor";
 import { useAccesibilidad } from "../hooks/useAccesibilidad";
 import { useNavigate } from "react-router-dom";
 
+const TEXTO_INTRODUCCION = `Buenos días. Esta es una pequeña encuesta para saber cómo se sintió usando el Agro Kiosko. No hay respuestas buenas ni malas. Solo queremos saber qué tan de acuerdo está usted con lo que dice cada oración. Para responder, elija un número del 1 al 5. Su opinión es muy importante. Muchas gracias por su tiempo.`;
+
 export const Encuesta = () => {
   const { temaActual, nivelLetra } = useAccesibilidad();
   const navigate = useNavigate();
@@ -23,13 +25,10 @@ export const Encuesta = () => {
   const tamanoPregunta = nivelLetra === "normal" ? "22px" : nivelLetra === "grande" ? "28px" : "34px";
   const tamanoLeyenda = nivelLetra === "normal" ? "18px" : nivelLetra === "grande" ? "24px" : "28px";
 
-  // Texto introductorio para la lectura de voz automática
-  const textoIntroduccion = `Buenos días. Esta es una pequeña encuesta para saber cómo se sintió usando el Agro Kiosko. No hay respuestas buenas ni malas. Solo queremos saber qué tan de acuerdo está usted con lo que dice cada oración. Para responder, elija un número del 1 al 5. Su opinión es muy importante. Muchas gracias por su tiempo.`;
-
   useEffect(() => {
     if ("speechSynthesis" in window) {
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(textoIntroduccion);
+      const utterance = new SpeechSynthesisUtterance(TEXTO_INTRODUCCION);
       utterance.lang = "es-ES";
       utterance.rate = 0.85; // Un poco más pausado para zonas rurales
       window.speechSynthesis.speak(utterance);
@@ -37,7 +36,7 @@ export const Encuesta = () => {
     return () => {
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     };
-  }, [textoIntroduccion]);
+  }, []);
 
   const preguntas = [
     { id: "p1", num: "1", texto: "Cuando presioné una tecla, la pantalla me mostró claramente cuál opción elegí y escuché una voz que me explicó lo que pasó." },

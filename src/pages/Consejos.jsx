@@ -37,7 +37,9 @@ export const Consejos = () => {
             height="auto"
             controls={false}
           >
-            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+            <source src="/tutorial_final.mp4" type="video/mp4" />
+            <track src="/sub.vvt" kind="subtitles" srcLang="es" label="Español" default />
+            Tu navegador no soporta videos HTML5.
           </video>
         </div>
 

@@ -4,8 +4,10 @@ import { useAccesibilidad } from "../hooks/useAccesibilidad";
 import { useNavigate } from "react-router-dom";
 import { MenuOpciones } from "../components/organisms/MenuOpciones";
 
+const TEXTO_LECTURA = `Bienvenido a Agro Kiosko, tu asistente agrícola inteligente. Presiona cualquier número del 1 al 4 para las opciones principales. Presiona el número 5 para ver el video de consejos de uso, o presiona el número 6 para responder la encuesta de satisfacción.`;
+
 export const Home = () => {
-  const { temaActual, nivelLetra } = useAccesibilidad();
+  const { temaActual, nivelLetra, showFeedbackModal } = useAccesibilidad();
   const navigate = useNavigate();
   
   // Estados para controlar el modal y el video
@@ -19,8 +21,6 @@ export const Home = () => {
       : nivelLetra === "grande"
         ? "38px"
         : "45px";
-
-  const textoLectura = `Bienvenido a Agro Kiosko, tu asistente agrícola inteligente. Presiona cualquier número del 1 al 4 para las opciones principales. Presiona el número 5 para ver el video de consejos de uso, o presiona el número 6 para responder la encuesta de satisfacción.`;
 
   // Función para alternar Play/Pausa en el video nativo
   const alternarReproduccion = () => {
@@ -44,39 +44,65 @@ export const Home = () => {
   };
 
   useEffect(() => {
-    const ejecutarLectura = () => {
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(TEXTO_LECTURA);
+      utterance.lang = "es-ES";
+      utterance.rate = 0.85; 
+      window.speechSynthesis.speak(utterance);
+    }
+    return () => {
       if ("speechSynthesis" in window) {
         window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(textoLectura);
-        utterance.lang = "es-ES";
-        utterance.rate = 0.85; 
-        window.speechSynthesis.speak(utterance);
       }
     };
+  }, []);
 
-    ejecutarLectura();
-
+  useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === "1") {
+      const numericKeys = {
+        "1": "Uno",
+        "2": "Dos",
+        "3": "Tres",
+        "4": "Cuatro",
+        "5": "Cinco",
+        "6": "Seis",
+      };
+
+      if (numericKeys[event.key]) {
         window.speechSynthesis.cancel();
-        navigate("/Clima");
-      } else if (event.key === "3") {
-        window.speechSynthesis.cancel();
-        navigate("/Plagas");
-      } else if (event.key === "2") {
-        window.speechSynthesis.cancel();
-        navigate("/Calculadora");
-      } else if (event.key === "4") {
-        window.speechSynthesis.cancel();
-        navigate("/seleccion-cultivo");
-      } else if (event.key === "5") {
-        window.speechSynthesis.cancel();
-        setMostrarModal(true); 
-      } else if (event.key === "6") {
-        window.speechSynthesis.cancel();
-        navigate("/encuesta"); 
+        const utterance = new SpeechSynthesisUtterance(numericKeys[event.key]);
+        utterance.lang = "es-ES";
+        utterance.rate = 1.0;
+        window.speechSynthesis.speak(utterance);
+
+        const keyLabels = {
+          "1": "El clima de hoy",
+          "2": "Calculadora para comprar semillas y abono",
+          "3": "Ver si hay plagas en tu zona",
+          "4": "Elegir qué cultivo vas a sembrar",
+          "5": "Ver video explicativo de consejos de uso",
+          "6": "Responder la encuesta para darnos tu opinión"
+        };
+        showFeedbackModal(event.key, keyLabels[event.key]);
+
+        const actionDelayMs = 3000;
+
+        if (event.key === "1") {
+          setTimeout(() => navigate("/Clima"), actionDelayMs);
+        } else if (event.key === "3") {
+          setTimeout(() => navigate("/Plagas"), actionDelayMs);
+        } else if (event.key === "2") {
+          setTimeout(() => navigate("/Calculadora"), actionDelayMs);
+        } else if (event.key === "4") {
+          setTimeout(() => navigate("/seleccion-cultivo"), actionDelayMs);
+        } else if (event.key === "5") {
+          setTimeout(() => setMostrarModal(true), actionDelayMs);
+        } else if (event.key === "6") {
+          setTimeout(() => navigate("/encuesta"), actionDelayMs);
+        }
       } else if (event.key === "Escape") {
-        cerrarModalVideo(); // Usa la nueva función segura
+        cerrarModalVideo();
       }
     };
 
@@ -84,11 +110,8 @@ export const Home = () => {
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
     };
-  }, [navigate, textoLectura]);
+  }, [navigate, showFeedbackModal]);
 
 
   return (
@@ -209,9 +232,8 @@ export const Home = () => {
                 width="100%"
                 controls={false} // Oculta los controles diminutos del navegador
               >
-                {/* Enlace de emergencia que funciona sin errores */}
-                <source src="/video_local.mp4" type="video/mp4" />
-                <track src="/consejos.vtt" kind="subtitles" srcLang="es" label="Español" default />
+                <source src="/tutorial_final.mp4" type="video/mp4" />
+                <track src="/sub.vvt" kind="subtitles" srcLang="es" label="Español" default />
                 Tu navegador no soporta videos HTML5.
               </video>
             </div>

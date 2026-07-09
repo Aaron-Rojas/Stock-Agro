@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { Contenedor } from "../components/atoms/Contenedor";
 import { useAccesibilidad } from "../hooks/useAccesibilidad";
 
+const TEXTO_LECTURA = `Recomendación para cuidar de tus siembras. Tip 1:  Mezcla el jabón con agua, rocía las plantas afectadas, asegúrate de mojar la parte de abajo de las hojas y aplícalo siempre en la tarde cuando no haya sol. Presione el número cero para regresar.`;
+
 export const CuidarSiembras = () => {
-    const { temaActual, nivelLetra } = useAccesibilidad();
+    const { temaActual, nivelLetra, showFeedbackModal } = useAccesibilidad();
     const navigate = useNavigate();
 
     const calcularTamano = (tamanoBase) => {
@@ -13,28 +15,48 @@ export const CuidarSiembras = () => {
         return tamanoBase + "px";
     };
 
-    const textoLectura = `Recomendación para cuidar de tus siembras. Tip 1:  Mezcla el jabón con agua, rocía las plantas afectadas, asegúrate de mojar la parte de abajo de las hojas y aplícalo siempre en la tarde cuando no haya sol. Presione el número cero para regresar.`;
-
     useEffect(() => {
-        const ejecutarLectura = () => {
+        if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(TEXTO_LECTURA);
+            utterance.lang = "es-ES";
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+        return () => {
             if ("speechSynthesis" in window) {
                 window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(textoLectura);
-                utterance.lang = "es-ES";
-                utterance.rate = 0.9;
-                window.speechSynthesis.speak(utterance);
             }
         };
+    }, []);
 
-        ejecutarLectura();
-
+    useEffect(() => {
         const handleKeyDown = (event) => {
-            if (event.key === "1") {
+            const numericKeys = {
+                "0": "Cero",
+                "1": "Uno"
+            };
+
+            if (numericKeys[event.key]) {
                 window.speechSynthesis.cancel();
-                navigate("/CuidarSiembras");
-            } else if (event.key === "0") {
-                window.speechSynthesis.cancel();
-                navigate("/");
+                const utterance = new SpeechSynthesisUtterance(numericKeys[event.key]);
+                utterance.lang = "es-ES";
+                utterance.rate = 1.0;
+                window.speechSynthesis.speak(utterance);
+
+                if (event.key === "0") {
+                    showFeedbackModal("0", "Regresar a la pantalla de inicio", true);
+                } else {
+                    showFeedbackModal("1", "Consejos para cuidar tus plantas");
+                }
+
+                const actionDelayMs = 3000;
+
+                if (event.key === "1") {
+                    setTimeout(() => navigate("/CuidarSiembras"), actionDelayMs);
+                } else if (event.key === "0") {
+                    setTimeout(() => navigate("/"), actionDelayMs);
+                }
             }
         };
 
@@ -42,11 +64,8 @@ export const CuidarSiembras = () => {
 
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
-            if ("speechSynthesis" in window) {
-                window.speechSynthesis.cancel();
-            }
         };
-    }, [navigate, textoLectura]);
+    }, [navigate, showFeedbackModal]);
 
     const renderFilaResultado = (texto) => (
         <div
